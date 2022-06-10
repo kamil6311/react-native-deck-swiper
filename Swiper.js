@@ -541,9 +541,9 @@ class Swiper extends Component {
   }
 
   onSwipedCallbacks = (swipeDirectionCallback) => {
+    this.setState(this.rebuildStackValues);
     const previousCardIndex = this.state.firstCardIndex
     this.props.onSwiped(previousCardIndex, this.state.cards[previousCardIndex])
-
     if (swipeDirectionCallback) {
       swipeDirectionCallback(previousCardIndex, this.state.cards[previousCardIndex])
     }
@@ -839,6 +839,16 @@ class Swiper extends Component {
         }
       </Animated.View>
     )
+  }
+
+  rebuildStackValues = () => {
+    const stackPositionsAndScales = {}
+    const { stackSize, stackSeparation, stackScale } = this.props
+    for (let position = 0; position < stackSize; position++) {
+      stackPositionsAndScales[`stackPosition${position}`] = new Animated.Value(stackSeparation * position)
+      stackPositionsAndScales[`stackScale${position}`] = new Animated.Value((100 - stackScale * position) * 0.01)
+    }
+    return stackPositionsAndScales
   }
 }
 
